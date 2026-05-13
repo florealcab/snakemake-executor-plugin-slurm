@@ -28,6 +28,10 @@ from snakemake_interface_executor_plugins.jobs import (
 )
 from snakemake_interface_common.exceptions import WorkflowError
 
+from snakemake_interface_logger_plugins.common import LogEvent
+
+from snakemake.logging import logger
+
 from .utils import (
     delete_slurm_environment,
     delete_empty_dirs,
@@ -193,6 +197,7 @@ class Executor(RemoteExecutor):
         self.test_mode = test_mode
         self.run_uuid = str(uuid.uuid4())
         self.logger.info(f"SLURM run ID: {self.run_uuid}")
+        logger.info(self.run_uuid, extra={"event": LogEvent.CLUSTER_GROUP_ID})
         self._fallback_account_arg = None
         self._fallback_partition = None
         self._preemption_warning = False  # no preemption warning has been issued
